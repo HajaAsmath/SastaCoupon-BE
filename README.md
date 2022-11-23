@@ -1,1 +1,2 @@
-# SastaCoupon-BE
+# SastaCouponBackEnd
+Sasta Coupon Backend
