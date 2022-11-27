@@ -4,11 +4,11 @@ require('dotenv').config();
 const { existsSync, mkdirSync } = require('fs');
 const winstonDaily = require('winston-daily-rotate-file');
 
-// const logDir = join(__dirname, process.env.LOG_DIR);
+const logDir = join(__dirname, process.env.LOG_DIR);
 
-// if (!existsSync(logDir)) {
-//   mkdirSync(logDir);
-// }
+if (!existsSync(logDir)) {
+  mkdirSync(logDir);
+}
 
 const logFormat = format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`);
 
@@ -45,4 +45,5 @@ const logger = createLogger({
         // })
     ]
 });
+
 module.exports = logger

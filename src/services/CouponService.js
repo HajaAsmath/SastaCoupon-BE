@@ -57,5 +57,9 @@ const getImageId = (url) => {
     });;
 }
 
+const getCouponWithFilters = () => {
+    return couponRepo.findCouponWithFilters(pagination, denomination)
+}
+
   
-module.exports = {getAllImagesAndOccasion, validateAndUploadCoupon, getRecentCoupons}
+module.exports = {getAllImagesAndOccasion, validateAndUploadCoupon, getRecentCoupons, getCouponWithFilters}

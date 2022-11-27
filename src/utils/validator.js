@@ -1,4 +1,4 @@
-checkObjectForNullValue = (obj) => {
+const checkObjectForNullValue = (obj) => {
     for(const ele in obj) {
         if(!checkIfNull(obj[ele])) {
             return true;
