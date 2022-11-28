@@ -57,8 +57,14 @@ const getImageId = (url) => {
     });;
 }
 
-const getCouponWithFilters = () => {
-    return couponRepo.findCouponWithFilters(pagination, denomination)
+const getCouponWithFilters = (pagination, denomination) => {
+    return couponRepo.findCouponWithFilters(pagination, denomination).then(data => {
+        if(data[0]) {
+            return data[0];
+        } else {
+            throw new Error('No data found');
+        }
+    });
 }
 
   

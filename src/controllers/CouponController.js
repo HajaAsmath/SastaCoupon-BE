@@ -18,7 +18,7 @@ const uploadCoupon = (req, res) => {
         const coupon = req.body;
         coupon.userId = req.user.userId;
         couponService.validateAndUploadCoupon(coupon);
-        res.send(200);
+        res.status(200).send();
     }catch(err) {
         logger.error(err);
         if(err instanceof CouponValidationException) {
@@ -51,12 +51,14 @@ const fetchRecentCoupons = async (req, res) => {
 
 const fetchCouponWithFilters = async (req, res) => {
     let {lastSeenId, min, max} = req.query;
-    res.status(200).send();
-    // let couponArray;
-    // try {
-    //     couponArray = await couponServoce.getCouponWithFilters();
-    //     res.status(200).json(couponArray);
-    // }
+    let couponArray;
+    try {
+        couponArray = await couponService.getCouponWithFilters(lastSeenId, {min, max});
+        res.status(200).json(JSON.stringify(couponArray));
+    }catch (err) {
+        logger.error(err);
+        res.send(500);
+    }
 }
 
 module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters};

@@ -6,20 +6,26 @@ const insertCoupon = async (coupon) => {
 }
 
 const findByRecent = () => {
-    return db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID ORDER BY CREATED_TIMESTAMP LIMIT 8`)
+    return db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID ORDER BY CREATED_TIMESTAMP DESC LIMIT 8`)
 }
 
-const findCouponWithFilters = (lastFetchedId, denomination) => {
-    let sql = `SELECT * FROM COUPON where ID >= ${lastFetchedId}`;
+const findCouponWithFilters = (lastFetchedId, denomination, fromDate, toDate) => {
+    let sql = `SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE c.ID >= ${lastFetchedId} `;
     if(denomination) {
         if(denomination.min) {
-            sql = sql + `PRICE >= ${denomination.min}`
+            sql = sql + `AND PRICE >= ${denomination.min} `
         }
         if(denomination.max) {
-            sql = sql + `AND PRICE <= ${denomination.max}`
+            sql = sql + `AND PRICE <= ${denomination.max} `
         }
-        sql = sql + `LIMIT 30`;
     }
+    if(fromDate && toDate) {
+        const from = new Date(fromDate).toISOString().slice(0,10);
+        const to = new Date(toDate).toISOString().slice(0,10);
+        sql = sql + `AND CREATED_TIMESTAMP BETWEEN DATE('${from}') AND DATE('${to}') `;
+    }
+
+    sql = sql + `LIMIT 30`;
     return db.promise().query(sql);
 }
 
