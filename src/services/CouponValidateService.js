@@ -1,16 +1,19 @@
-const { default: axios } = require("axios")
+const axios = require("axios")
 const CouponValidationException = require("../exceptions/CouponValidationException")
-
+require('dotenv').config();
 
 const validateCoupon = (couponCode, expiryDate) => {
-    axios.post('http://localhost:9000/validate', {
+    return axios.post(`${process.env.BACKEND_URL}/validate`, {
         couponCode: couponCode,
         expiryDate: expiryDate
-    }).then(res => {
-        if(res.status !== 200) {
-            throw new CouponValidationException(res.statusText);
-        }
-    })
+    });
 }
 
-module.exports = {validateCoupon};
+const validateCouponExpiry = (coupon) => { 
+    const validationResult = true;
+    if(!validationResult) {
+        throw new CouponValidationException("Coupon is invalid");
+    }
+}
+
+module.exports = {validateCoupon, validateCouponExpiry};

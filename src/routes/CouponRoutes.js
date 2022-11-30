@@ -6,5 +6,7 @@ const authMiddleWare = require('../middlewares/AuthMiddleware');
 router.get('/images', authMiddleWare,couponController.getImagesAndOccasion);
 router.post('/uploadCoupon',authMiddleWare, couponController.uploadCoupon)
 router.get('/recent-coupon', couponController.fetchRecentCoupons);
-router.get('/coupon-list', couponController.fetchCouponWithFilters)
+router.get('/coupon-list', couponController.fetchCouponWithFilters);
+router.post('/validate', couponController.validateCoupon);
+router.get('/coupons-count', couponController.fetchCouponCount);
 module.exports = router;

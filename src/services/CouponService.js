@@ -25,14 +25,17 @@ const getAllImagesAndOccasion = async () => {
 }
 
 const validateAndUploadCoupon = async (coupon) => {
-    //couponValidationService.validateCoupon(coupon.couponCode, coupon.expiryDate);
+    await couponValidationService.validateCoupon(coupon.couponCode, coupon.expiryDate).catch((err) =>{
+        throw new CouponValidationException('Coupon validation failed: '+err.message);
+    });
     if(!checkObjectForNullValue(coupon) && checkPastDate(new Date(coupon.expiryDate))) {
         coupon.imageId = await getImageId(coupon.couponImage);
         await couponRepo.insertCoupon(coupon).then((data) => {
             if(data[0].affectedRows === 1)  {
                 return 'Success';
             }
-            throw new Error('Error while inserting coupon')
+        }).catch(err => {
+            throw new Error('Error while inserting coupon');
         });
     } else {
         throw new CouponValidationException('Coupon fields are empty');
@@ -57,15 +60,32 @@ const getImageId = (url) => {
     });;
 }
 
-const getCouponWithFilters = (pagination, denomination) => {
-    return couponRepo.findCouponWithFilters(pagination, denomination).then(data => {
+const fetchCouponCount = () => {
+    return couponRepo.getCouponCount().then(data => {
         if(data[0]) {
             return data[0];
+        }
+    })
+}
+
+const getCouponWithFilters = async (filters) => {
+    const couponArray = await couponRepo.findCouponWithFilters(filters).then(data => {
+        if(data[0]) {
+            return [data[0]];
         } else {
             throw new Error('No data found');
         }
     });
+    const count = await couponRepo.findCouponWithFilters(filters, true).then(data => {
+        if(data[0]) {
+            return [data[0].length];
+        } else {
+            throw new Error('No data found');
+        }
+    });
+
+    return [couponArray, count]
 }
 
   
-module.exports = {getAllImagesAndOccasion, validateAndUploadCoupon, getRecentCoupons, getCouponWithFilters}
+module.exports = {getAllImagesAndOccasion, validateAndUploadCoupon, getRecentCoupons, getCouponWithFilters, fetchCouponCount}

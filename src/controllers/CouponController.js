@@ -1,7 +1,13 @@
 const logger = require('../utils/logger')
 const couponService = require('../services/CouponService');
+const validateCouponService = require('../services/CouponValidateService')
 const CouponValidationException = require('../exceptions/CouponValidationException');
+const domain = require('domain').create();
 const memcache = require('../utils/memcache');
+
+// domain.on('error', (err) => {
+//     logger.error(err.message);
+// })
 
 const getImagesAndOccasion = async (req, res) => {
     try {
@@ -13,18 +19,18 @@ const getImagesAndOccasion = async (req, res) => {
     }
 }
 
-const uploadCoupon = (req, res) => {
+const uploadCoupon = async (req, res, next) => {
     try {
         const coupon = req.body;
         coupon.userId = req.user.userId;
-        couponService.validateAndUploadCoupon(coupon);
+        await couponService.validateAndUploadCoupon(coupon);
         res.status(200).send();
     }catch(err) {
         logger.error(err);
         if(err instanceof CouponValidationException) {
-            res.status(err.statusCode()).send(err);
+            res.status(err.statusCode()).send(err.message);
         } else {
-            res.status(500).send(err);
+            res.status(500).send(err.message);
         }
     }
 }
@@ -49,16 +55,39 @@ const fetchRecentCoupons = async (req, res) => {
     // }
 } 
 
-const fetchCouponWithFilters = async (req, res) => {
-    let {lastSeenId, min, max} = req.query;
+const fetchCouponWithFilters = async (req, res, next) => {
+    let {itemsPerPage, pageNumber, min, max, fromDate, toDate} = req.query;
     let couponArray;
     try {
-        couponArray = await couponService.getCouponWithFilters(lastSeenId, {min, max});
-        res.status(200).json(JSON.stringify(couponArray));
+        couponObj = await couponService.getCouponWithFilters({itemsPerPage, pageNumber, min, max, fromDate, toDate});
+        couponArray = couponObj[0][0];
+        const count = couponObj[1];
+        res.status(200).json(JSON.stringify({couponArray, count}));
     }catch (err) {
         logger.error(err);
         res.send(500);
     }
 }
 
-module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters};
+const validateCoupon = (req, res) => {
+    let coupon = req.body;
+    try {
+        validateCouponService.validateCouponExpiry(coupon);
+        res.status(200).send();
+    } catch(err) {
+        logger.error(err);
+        res.status(500).send();
+    }
+}
+
+const fetchCouponCount = async (req, res) => {
+    try {
+        const count = await couponService.fetchCouponCount();
+        res.status(200).json(count);
+    } catch(err) {
+        logger.error(err);
+        res.send(500);
+    }
+}
+ 
+module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters, validateCoupon, fetchCouponCount};
