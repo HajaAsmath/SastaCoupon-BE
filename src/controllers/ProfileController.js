@@ -126,4 +126,16 @@ const profile_post = async (req, res) => {
 
 }
 
-module.exports = {  profile_get, profile_post }
+const getUserCredits = async (req, res) => {
+    try {
+      const credits = await profileService.getUserCredits(req.user.userId).catch(err => {
+        throw Error('Unexpected error while fetching credits');
+      });
+      res.status(200).json(JSON.stringify({credits: credits}));
+    } catch(err) {
+      logger.error('Error fetching credits - ', err);
+      res.status(500).send(err.message);
+    }
+}
+
+module.exports = {  profile_get, profile_post, getUserCredits }

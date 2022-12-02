@@ -12,4 +12,8 @@ const saveProfile = async (user_profile) => {
     .query(`UPDATE USERS SET FIRST_NAME =  ${user_profile.firstname} , LAST_NAME = ${user_profile.lastname} , CONTACT = ${user_profile.contact} WHERE ID =  ${user_profile.id}`);
 }
 
-module.exports = { findProfile,saveProfile }
+const fetchCreditsById = (userId) => {
+    return db.promise().query(`SELECT WALLET_AMOUNT FROM USERS WHERE ID = ${userId}`);
+}
+
+module.exports = { findProfile,saveProfile, fetchCreditsById }

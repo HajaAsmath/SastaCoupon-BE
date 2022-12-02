@@ -11,7 +11,7 @@ const logIn = async (email, passsword) => {
                 }
                 throw new Error('User not found');
             } else {
-                throw new Error('User not found');
+                throw new Error(`Username/Password doesn't match`);
             }
         }).catch((err) => {
             throw err;

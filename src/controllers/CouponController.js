@@ -5,10 +5,6 @@ const CouponValidationException = require('../exceptions/CouponValidationExcepti
 const domain = require('domain').create();
 const memcache = require('../utils/memcache');
 
-// domain.on('error', (err) => {
-//     logger.error(err.message);
-// })
-
 const getImagesAndOccasion = async (req, res) => {
     try {
         const imageList = await couponService.getAllImagesAndOccasion();
@@ -37,35 +33,53 @@ const uploadCoupon = async (req, res, next) => {
 
 const fetchRecentCoupons = async (req, res) => {
     let couponArray;
-    couponArray = JSON.stringify(await couponService.getRecentCoupons());
-    res.status(200).json(couponArray);
-    // try {
-    //     memcache.get(memcache.generateKey('recent-coupon'), async (err, val) => {
-    //         if(err) return null;
-    //         couponArray = JSON.parse(val);
-    //         if(!couponArray) {
-    //             couponArray = JSON.stringify(await couponService.getRecentCoupons());
-    //             memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
-    //         } 
-    //         res.status(200).json(couponArray);
-    //     });
-    // } catch (err) {
-    //     logger.error(err);
-    //     res.status(500).send();
-    // }
+    try {
+        memcache.get(memcache.generateKey('recent-coupon'), async (err, val) => {
+            couponArray = JSON.parse(val);
+            if(!couponArray) {
+                couponArray = JSON.stringify(await couponService.getRecentCoupons());
+                memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
+            } 
+            res.status(200).json(couponArray);
+        }).catch(async (err) => {
+            logger.error('Error occured fetching recent coupons - ', err);
+            couponArray = JSON.stringify(await couponService.getRecentCoupons());
+            memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
+            res.status(200).json(couponArray);
+        });
+    } catch (err) {
+        logger.error(err);
+        res.status(500).send();
+    }
 } 
 
 const fetchCouponWithFilters = async (req, res, next) => {
     let {itemsPerPage, pageNumber, min, max, fromDate, toDate} = req.query;
     let couponArray;
+    let count;
     try {
-        couponObj = await couponService.getCouponWithFilters({itemsPerPage, pageNumber, min, max, fromDate, toDate});
-        couponArray = couponObj[0][0];
-        const count = couponObj[1];
-        res.status(200).json(JSON.stringify({couponArray, count}));
-    }catch (err) {
+        memcache.get(memcache.generateKey('filtered-coupons'+pageNumber+min+max+fromDate+toDate), async (err, val) => {
+            let couponObj = JSON.parse(val);
+            if(!couponObj) {
+                const coupon = await couponService.getCouponWithFilters({itemsPerPage, pageNumber, min, max, fromDate, toDate});
+                couponArray = coupon[0][0];
+                count = coupon[1];
+                couponObj = {couponArray, count};
+                memcache.set(memcache.generateKey('filtered-coupons'+pageNumber+min+max+fromDate+toDate), couponObj, 300);
+            } 
+            res.status(200).json(JSON.stringify(couponObj));
+        }).catch(async (err) => {
+            logger.error('Error occured fetching recent coupons - ', err);
+            const coupon = await couponService.getCouponWithFilters({itemsPerPage, pageNumber, min, max, fromDate, toDate});
+            couponArray = coupon[0][0];
+            count = coupon[1];
+            couponObj = {couponArray, count};
+            memcache.set(memcache.generateKey('filtered-coupons'+pageNumber+min+max+fromDate+toDate), couponObj, 300);
+            res.status(200).json(JSON.stringify(couponObj));
+        });
+    } catch (err) {
         logger.error(err);
-        res.send(500);
+        res.status(500).send();
     }
 }
 
