@@ -41,4 +41,13 @@ const saveUserDetail = async (user_profile) => {
     
 }
 
-module.exports = {getUserDetail,saveUserDetail}
+const getUserCredits = (userId) => {
+    return profileRepo.fetchCreditsById(userId).then(data => {
+        if(data[0].length > 0) {
+            return data[0][0].WALLET_AMOUNT;
+        }
+        return 'User not found';
+    })
+}
+
+module.exports = {getUserDetail,saveUserDetail, getUserCredits}
