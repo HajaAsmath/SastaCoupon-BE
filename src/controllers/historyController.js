@@ -13,7 +13,8 @@ let buyer_id =req.query.id;
 console.log(req.query);
 
 var result1;
-var sql = 'SELECT * FROM ORDER_DETAILS  WHERE BUYER_ID = ?';
+
+var sql = 'SELECT ORDER_DETAILS.ORDER_ID,ORDER_DETAILS.COUPON_ID,ORDER_DETAILS.STATUS,ORDER_DETAILS.BUYER_ID,ORDER_DETAILS.SELLER_ID,ORDER_DETAILS.TRANSACTION_TYPE,ORDER_DETAILS.PAYMENT_TIMESTAMP,ORDER_DETAILS.PAYMENT_ID,URL FROM ORDER_DETAILS INNER  JOIN COUPON ON ORDER_DETAILS.COUPON_ID = COUPON.ID  INNER JOIN  COUPON_IMAGE ON COUPON_IMAGE.ID = COUPON.IMAGE_ID  WHERE ( ORDER_DETAILS.BUYER_ID = ? OR ORDER_DETAILS.SELLER_ID = ?  ) ORDER BY PAYMENT_TIMESTAMP DESC';
 
     db.query(sql, [buyer_id], function (err, result, fields) {
         if (err) {
@@ -25,6 +26,12 @@ var sql = 'SELECT * FROM ORDER_DETAILS  WHERE BUYER_ID = ?';
             res.send("Incorrect Coupon Id")
         }
         else {
+
+            result.map((item) => {
+                if (item.SELLER_ID == buyer_id) {
+                    item.TRANSACTION_TYPE = 'SOLD';
+                }
+            })
             logger.info("Response of Product details:" + JSON.stringify(result));
             res.status(200).json(JSON.stringify(result));
         }

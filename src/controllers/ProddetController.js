@@ -21,7 +21,7 @@ const payment = async (req, res) => {
     console.log(amount);
     const currency = 'INR';
     var sql = 'INSERT INTO ORDER_DETAILS (ORDER_ID,COUPON_ID,STATUS,BUYER_ID,TRANSACTION_TYPE,PAYMENT_ID)VALUES ?';
-    // var sql_amount = 'UPDATE USERS SET  WALLET_AMOUNT = ?  WHERE ID = ?';
+    var sql_amount = 'UPDATE USERS SET WALLET_AMOUNT = ?  WHERE ID = ?';
     const options = {
         amount: amount,
         currency,
@@ -50,10 +50,19 @@ const payment = async (req, res) => {
                 }
                 else {
                     console.log("" + JSON.stringify(result));
-                    // res.send(JSON.stringify(result.affectedRows));
+                    db.query(sql_amount, [req.body.amount,req.body.seller_id], function (err, result, fields) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log('Executed Successfully');
+                            console.log(result.affectedRows + " record(s) updated");
+                        }
+
+                    });
                 }
             });
-        //**************************
+        
         res.json({
             id: response.id,
             currency: response.currency,
