@@ -5,9 +5,9 @@ const logIn = async (email, passsword) => {
         return await userRepo.findByEmaiId(email)
         .then(async (data) => {
             if(data[0].length>0) {
-                const {ID, PASSWORD}  = data[0][0];
+                const {ID, PASSWORD, WALLET_AMOUNT}  = data[0][0];
                 if(await bcrypt.compare(passsword, PASSWORD)) {
-                    return {userId: ID};
+                    return {userId: ID, credits: WALLET_AMOUNT};
                 }
                 throw new Error('User not found');
             } else {

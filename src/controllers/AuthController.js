@@ -11,7 +11,7 @@ const logIn = async (req, res) => {
         result = await authService.logIn(req.body.email, req.body.password);
         if(result) {
             const token = addJwtToken({ userId: result.userId, email: req.body.email}, res);
-            res.status(200).json({userId: result.userId, email: req.body.email,token: token});
+            res.status(200).json({userId: result.userId, email: req.body.email, credits: result.credits, token: token});
         }
     } catch(err) {
         logger.error(err);
