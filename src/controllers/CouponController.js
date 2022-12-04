@@ -2,7 +2,6 @@ const logger = require('../utils/logger')
 const couponService = require('../services/CouponService');
 const validateCouponService = require('../services/CouponValidateService')
 const CouponValidationException = require('../exceptions/CouponValidationException');
-const domain = require('domain').create();
 const memcache = require('../utils/memcache');
 
 const getImagesAndOccasion = async (req, res) => {
@@ -90,7 +89,7 @@ const validateCoupon = (req, res) => {
         res.status(200).send();
     } catch(err) {
         logger.error(err);
-        res.status(500).send();
+        res.status(500).send(err.message);
     }
 }
 
@@ -103,5 +102,10 @@ const fetchCouponCount = async (req, res) => {
         res.send(500);
     }
 }
+
+const flushCache = (req, res) => {
+    memcache.flush();
+    res.status(200).send();
+}
  
-module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters, validateCoupon, fetchCouponCount};
+module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters, validateCoupon, fetchCouponCount, flushCache};

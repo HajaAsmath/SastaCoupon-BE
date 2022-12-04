@@ -1,16 +1,13 @@
 const mysql = require('mysql2');
-const logger = require('./src/utils/logger');
+const logger = require('../utils/logger');
 require('dotenv').config();
 const dbConnect = () => {
-  console.log("Inside Mysql");
   const db = mysql.createConnection({
     host: process.env.HOST,
     user: 'admin',
     password: process.env.PASSWORD,
     database: process.env.DATABASE
   });
-
-  console.log(process.env.USERNAME);
 
 //  console.log(db);
   

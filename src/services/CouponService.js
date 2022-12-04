@@ -4,6 +4,7 @@ const couponValidationService = require('./CouponValidateService')
 const couponRepo = require('../repos/CouponRepo')
 const {checkObjectForNullValue, checkPastDate} = require('../utils/validator');
 const logger = require('../utils/logger');
+const memcache = require('../utils/memcache');
 
 
 const getAllImagesAndOccasion = async () => {
@@ -26,12 +27,13 @@ const getAllImagesAndOccasion = async () => {
 
 const validateAndUploadCoupon = async (coupon) => {
     await couponValidationService.validateCoupon(coupon.couponCode, coupon.expiryDate).catch((err) =>{
-        throw new CouponValidationException('Coupon validation failed: '+err.message);
+        throw new CouponValidationException(err.response.data);
     });
     if(!checkObjectForNullValue(coupon) && checkPastDate(new Date(coupon.expiryDate))) {
         coupon.imageId = await getImageId(coupon.couponImage);
         await couponRepo.insertCoupon(coupon).then((data) => {
             if(data[0].affectedRows === 1)  {
+                memcache.flush();
                 return 'Success';
             }
         }).catch(err => {
