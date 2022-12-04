@@ -1,4 +1,4 @@
-const db = require('../../mysql');
+const db = require('../database/mysql');
 
 const findById = async (id) => {
     return db.promise().query(`SELECT * from COUPON_IMAGE where ID='${id}'`)

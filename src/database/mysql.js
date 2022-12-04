@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-const logger = require('./src/utils/logger');
+const logger = require('../utils/logger');
 require('dotenv').config();
 const dbConnect = () => {
   console.log("Inside Mysql");

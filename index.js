@@ -10,7 +10,7 @@ const logger = require('./src/utils/logger');
 const AuthRoutes = require('./src/routes/AuthRoutes') 
 const couponRoutes = require('./src/routes/CouponRoutes');
 app.use(require('cookie-parser')(process.env.COOKIE_SECRET));
-require('./mysql');
+require('./src/database/mysql');
 require('./src/utils/memcache')
 
 const  proddetRoutes  = require('./src/routes/productdetRoutes');

@@ -1,4 +1,4 @@
-const db = require('../../mysql');
+const db = require('../database/mysql');
 const { convertDate } = require('../utils/common');
 const logger = require('../utils/logger');
 

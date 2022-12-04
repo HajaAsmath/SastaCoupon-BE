@@ -1,4 +1,4 @@
-const db = require('../../mysql');
+const db = require('../database/mysql');
 const logger = require('../utils/logger');
 
 const insertContactUsInfo = async (contactUsForm) => {
