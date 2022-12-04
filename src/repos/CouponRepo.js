@@ -8,7 +8,7 @@ const insertCoupon = async (coupon) => {
 }
 
 const findByRecent = () => {
-    return db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE EXPIRY >= DATE(${convertDate(new Date())}) ORDER BY CREATED_TIMESTAMP DESC LIMIT 8`)
+    return db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE EXPIRY >= DATE('${convertDate(new Date())}') ORDER BY CREATED_TIMESTAMP DESC LIMIT 8`)
 }
 
 const findCouponWithFilters = (filters, isCount) => {
