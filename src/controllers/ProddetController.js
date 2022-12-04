@@ -51,7 +51,7 @@ const payment = async (req, res) => {
                 }
                 else {
                     console.log("" + JSON.stringify(result));
-                    db.query(sql_sold, ['X',req.body.coupon_id], function (err, result, fields) {
+                    db.query(sql_sold, ['TRUE',req.body.coupon_id], function (err, result, fields) {
                         if (err) {
                             console.log(err);
                         }
@@ -142,7 +142,7 @@ const product_details = (req, res) => {
     console.log(req.query);
 
     var result1;
-    var sql = 'SELECT a.ID,a.NAME, a.DESCRIPTION,a.EXPIRY,a.PRICE,a.SELLER_ID,a.BUYER_ID,a.IMAGE_ID,a.CREATED_TIMESTAMP,a.COUPON_CODE, b.URL, b.OCCASION ,b.DAFAULT_IMAGE  FROM COUPON AS a INNER JOIN COUPON_IMAGE AS b ON a.IMAGE_ID=b.ID WHERE a.ID = ?';
+    var sql = 'SELECT a.ID,a.NAME, a.DESCRIPTION,a.EXPIRY,a.PRICE,a.SELLER_ID,a.BUYER_ID,a.IMAGE_ID,a.CREATED_TIMESTAMP,a.COUPON_CODE, a.SOLD ,b.URL, b.OCCASION ,b.DAFAULT_IMAGE  FROM COUPON AS a INNER JOIN COUPON_IMAGE AS b ON a.IMAGE_ID=b.ID WHERE a.ID = ?';
 
 
         db.query(sql, [coupon_id], function (err, result, fields) {
