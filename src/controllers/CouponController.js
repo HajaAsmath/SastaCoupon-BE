@@ -102,5 +102,10 @@ const fetchCouponCount = async (req, res) => {
         res.send(500);
     }
 }
+
+const flushCache = (req, res) => {
+    memcache.flush();
+    res.status(200).send();
+}
  
-module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters, validateCoupon, fetchCouponCount};
+module.exports = {getImagesAndOccasion, uploadCoupon, fetchRecentCoupons, fetchCouponWithFilters, validateCoupon, fetchCouponCount, flushCache};
