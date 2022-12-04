@@ -2,7 +2,6 @@ const logger = require('../utils/logger')
 const couponService = require('../services/CouponService');
 const validateCouponService = require('../services/CouponValidateService')
 const CouponValidationException = require('../exceptions/CouponValidationException');
-const domain = require('domain').create();
 const memcache = require('../utils/memcache');
 
 const getImagesAndOccasion = async (req, res) => {
@@ -90,7 +89,7 @@ const validateCoupon = (req, res) => {
         res.status(200).send();
     } catch(err) {
         logger.error(err);
-        res.status(500).send();
+        res.status(500).send(err.message);
     }
 }
 

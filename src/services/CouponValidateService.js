@@ -1,6 +1,7 @@
 const axios = require("axios")
 const CouponValidationException = require("../exceptions/CouponValidationException");
 const logger = require("../utils/logger");
+const { checkContainsNumber } = require("../utils/validator");
 require('dotenv').config();
 
 const validateCoupon = (couponCode, expiryDate) => {
@@ -12,9 +13,9 @@ const validateCoupon = (couponCode, expiryDate) => {
 }
 
 const validateCouponExpiry = (coupon) => { 
-    const validationResult = Math.random() > 0.5 ? true : false;
+    const validationResult = checkContainsNumber(coupon.couponCode);
     if(!validationResult) {
-        throw new CouponValidationException("Coupon is invalid");
+        throw new CouponValidationException("Coupon is invalid, Please try again with numbers in coupon code.");
     }
 }
 
