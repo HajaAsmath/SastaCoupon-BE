@@ -4,7 +4,7 @@
 <p align="center">
     <img src="https://i.postimg.cc/Th8JBMtQ/Site-Icon.png" width="248px" >
 </p>
-We at “SASTACOUPON” bring together idea curators
+We at “SASTACOUPON” 
 and investors on one page along with our
 existing community who have invested in
 different ideas and have seen them make an

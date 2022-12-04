@@ -51,17 +51,6 @@ const payment = async (req, res) => {
                 }
                 else {
                     console.log("" + JSON.stringify(result));
-                    db.query(sql_sold, ['TRUE',req.body.coupon_id], function (err, result, fields) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            console.log('Coupon Sold ');
-                           
-                        }
-
-                    });
-
                     db.query(sql_amount, [req.body.amount,req.body.seller_id], function (err, result, fields) {
                         if (err) {
                             console.log(err);
