@@ -3,7 +3,7 @@ const shortid = require('shortid')
 const Razorpay = require('razorpay')
 const mysql = require('mysql');
 const logger = require('../utils/logger')
-const db = require('../../mysql');
+const db = require('../database/mysql');
 
 const coupon_history_get = async (req, res) => {
 console.log( "Inside History" );

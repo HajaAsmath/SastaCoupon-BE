@@ -20,5 +20,9 @@ const checkPastDate = (date) => {
     console.log(date > today);
     return date > today;
 }
+
+const checkContainsNumber = (str) => {
+    return /[0-9]/.test(str)
+}
  
-module.exports = {checkIfNull, checkPastDate, checkObjectForNullValue}
+module.exports = {checkIfNull, checkPastDate, checkObjectForNullValue, checkContainsNumber}

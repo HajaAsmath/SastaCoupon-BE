@@ -24,5 +24,8 @@ const generateKey = (name, id) => {
     return name+"_"+id;
 }
 
+const flush = () => {
+    memcache.flush();
+}
 
-module.exports = {set, get, verifyCacheMiddleware, generateKey};
+module.exports = {set, get, verifyCacheMiddleware, generateKey, flush};

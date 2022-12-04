@@ -1,4 +1,4 @@
-const db = require('../../mysql');
+const db = require('../database/mysql');
 
 const findByEmaiId = (email) => {
     return db.promise().query(`SELECT * from USERS where EMAIL_ID='${email}'`)

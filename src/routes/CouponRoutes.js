@@ -9,4 +9,5 @@ router.get('/recent-coupon', couponController.fetchRecentCoupons);
 router.get('/coupon-list', couponController.fetchCouponWithFilters);
 router.post('/validate', couponController.validateCoupon);
 router.get('/coupons-count', couponController.fetchCouponCount);
+router.get('/flushCache', couponController.flushCache)
 module.exports = router;

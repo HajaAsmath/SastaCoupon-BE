@@ -9,7 +9,7 @@ const logIn = async (email, passsword) => {
                 if(await bcrypt.compare(passsword, PASSWORD)) {
                     return {userId: ID, credits: WALLET_AMOUNT};
                 }
-                throw new Error('User not found');
+                throw new Error(`Username/Password doesn't match`);
             } else {
                 throw new Error(`Username/Password doesn't match`);
             }

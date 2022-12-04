@@ -64,7 +64,7 @@ const profile_get = async (req, res) => {
 
 }
 
-const db = require('../../mysql');
+const db = require('../database/mysql');
 
 const profile_post = async (req, res) => {
     const user_profile = req.body;
