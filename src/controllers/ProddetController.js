@@ -6,11 +6,11 @@ const logger = require('../utils/logger')
 const db = require('../../mysql');
 
 const razorpay = new Razorpay({
-    // key_id: 'rzp_test_NpKUjWehxc13rP',
-    // key_secret: 'XutQhK8ic37ngBLlmN2A499v'
+    key_id: 'rzp_test_NpKUjWehxc13rP',
+    key_secret: 'XutQhK8ic37ngBLlmN2A499v'
 
-    key_id: 'rzp_live_xPxs0PPQHo3DmY',
-    key_secret: 'jPfNpSqDxTZ9hMf3EvMBWPgS'
+    // key_id: 'rzp_live_xPxs0PPQHo3DmY',
+    // key_secret: 'jPfNpSqDxTZ9hMf3EvMBWPgS'
 })
 
 const payment = async (req, res) => {
@@ -22,6 +22,7 @@ const payment = async (req, res) => {
     const currency = 'INR';
     var sql = 'INSERT INTO ORDER_DETAILS (ORDER_ID,COUPON_ID,STATUS,BUYER_ID,TRANSACTION_TYPE,PAYMENT_ID)VALUES ?';
     var sql_amount = 'UPDATE USERS SET WALLET_AMOUNT = ?  WHERE ID = ?';
+    var sql_sold = 'UPDATE COUPON SET SOLD = X WHERE ID = ?';
     const options = {
         amount: amount,
         currency,
@@ -50,13 +51,23 @@ const payment = async (req, res) => {
                 }
                 else {
                     console.log("" + JSON.stringify(result));
+                    db.query(sql_sold, [req.body.coupon_id], function (err, result, fields) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log('Coupon Sold ');
+                           
+                        }
+
+                    });
+
                     db.query(sql_amount, [req.body.amount,req.body.seller_id], function (err, result, fields) {
                         if (err) {
                             console.log(err);
                         }
                         else {
                             console.log('Executed Successfully');
-                            console.log(result.affectedRows + " record(s) updated");
                         }
 
                     });
