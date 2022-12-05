@@ -1,5 +1,3 @@
-const convertDate = (date) => {
-    return new Date(date).toISOString().slice(0,10);
-}
+const convertDate = (date) => new Date(date).toISOString().slice(0, 10);
 
-module.exports = {convertDate}
+module.exports = { convertDate };

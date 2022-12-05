@@ -1,53 +1,28 @@
 const profileRepo = require('../repos/ProfileRepo');
 
-const mysql = require('mysql');
+const getUserDetail = async (userId) => profileRepo.findProfile(userId).then((data) => {
+  console.log(data[0]);
+  if (data[0].length > 0) {
+    console.log('Inside Profile Service inside check ');
 
+    return data[0];
+  }
+  throw new Error('User not found');
+});
+const saveUserDetail = (userProfile) => profileRepo.saveProfile(userProfile).then((data) => {
+  if (data[0].length > 0) {
+    console.log('Inside Profile Service inside check ');
 
-const getUserDetail = async (userId) => {
-    console.log("Inside Profile Service"+userId)
-    return await profileRepo.findProfile(userId).then((data) => {
-        console.log(data[0]);
-        if(data[0].length>0) {
-                console.log("Inside Profile Service inside check ")   ;
+    return data[0];
+  }
+  throw new Error('User not found');
+});
 
-               return data[0];
-            
-        } else {
-            throw new Error('User not found');
-        } 
-      
-           return data[0];
-        
-    });
-    
-}
-const saveUserDetail = async (user_profile) => {
-    console.log("Inside Profile Service"+user_profile)
-    return await profileRepo.saveProfile(user_profile).then((data) => {
-        console.log(data[0]);
-        
-        if(data[0].length>0) {
-                console.log("Inside Profile Service inside check ")   ;
+const getUserCredits = (userId) => profileRepo.fetchCreditsById(userId).then((data) => {
+  if (data[0].length > 0) {
+    return data[0][0].WALLET_AMOUNT;
+  }
+  return 'User not found';
+});
 
-               return data[0];
-            
-        } else {
-            throw new Error('User not found');
-        } 
-      
-           return data[0];
-        
-    });
-    
-}
-
-const getUserCredits = (userId) => {
-    return profileRepo.fetchCreditsById(userId).then(data => {
-        if(data[0].length > 0) {
-            return data[0][0].WALLET_AMOUNT;
-        }
-        return 'User not found';
-    })
-}
-
-module.exports = {getUserDetail,saveUserDetail, getUserCredits}
+module.exports = { getUserDetail, saveUserDetail, getUserCredits };
