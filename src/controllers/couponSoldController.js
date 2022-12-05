@@ -9,11 +9,12 @@ const couponSoldPost = async (req, res) => {
 
 
     logger.info(`Coupon Sold Triggered`+req.body);
-    let coupon_id = req.body.id;
+    let coupon_id = req.body.id  || req.query.id ;
+    console.log(coupon_id)
 
     var sql_sold = 'UPDATE COUPON SET SOLD = ? WHERE ID = ?';
 
-    db.query(sql_sold, ['TRUE', coupon_id], function (err, result, fields) {
+    db.query(sql_sold, ['1', coupon_id], function (err, result, fields) {
         if (err) {
             console.log(err);
         }
