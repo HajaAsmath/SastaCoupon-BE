@@ -4,11 +4,8 @@
 <p align="center">
     <img src="https://i.postimg.cc/Th8JBMtQ/Site-Icon.png" width="248px" >
 </p>
-We at “SASTACOUPON” 
-and investors on one page along with our
-existing community who have invested in
-different ideas and have seen them make an
-impact in our lives.
+
+Sasta Coupon is a platform where you can sell or donate a coupon to whomever in need. This prevent the coupon code from getting unused and it helps other who are in need of the discounts.
 
 
 Welcome! we hope you enjoy the site as much as we enjoyed making it.
@@ -51,21 +48,22 @@ A "login by test account" button is provided to start using the application with
 
 1. Clone the repo
     ```sh
-    git clone https://github.com/pesto-students/kayak-be-n12-beta.git
+    https://github.com/HajaAsmath/SastaCoupon-BE.git
     ```
 2. Set environment variables
 
-   CLOUDINARY_API_KEY=<br />
-   CLOUDINARY_API_SECRET= <br/>
-   CLOUDINARY_CLOUD_NAME= <br/>
-   CLOUDINARY_URL= <br/>
-   FRONTEND_HOST_NAME= <br/>
-   GOOGLE_CLIENT_ID= <br/>
-   GOOGLE_CLIENT_SECRET= <br/>
-   GOOGLE_PASSWORD= <br/>
-   GOOGLE_USERNAME= <br/>
-   RAZORPAY_API_SECRET= <br/>
-   RAZORPAY_CLIENT_ID= <br/>
+   ACCESS_TOKEN_SECRET_KEY ==<br />
+   REFRESH_TOKEN_SECRET_KEY= <br/>
+   COOKIE_SECRET= <br/>
+   LOG_DIR= <br/>
+   HOST= <br/>
+   USERNAME= <br/>
+   PASSWORD= <br/>
+   DATABASE= <br/>
+   MEMCACHIER_SERVERS= <br/>
+   MEMCACHIER_USERNAME = <br/>
+   MEMCACHIER_PASSWORD= <br/>
+   RAZORPAY API KEY= <br/>
 
 3. Install NPM packages
     ```sh
@@ -75,7 +73,7 @@ A "login by test account" button is provided to start using the application with
     ```sh
     npm start
     ```
-5. Open http://localhost:3001 to view it in the browser
+5. Open http://localhost:9000 to view it in the browser
 
 <br/>
 
@@ -87,9 +85,8 @@ We have taken utmost care while choosing our backend tech stack and given import
 - [Express](https://expressjs.com/)
 - [Razorpay](https://razorpay.com/)
 - [JWT](https://jwt.io/)
-- [Heroku](https://heroku.com/)
-- [AIrbnb Eslint](https://www.npmjs.com/package/eslint-config-airbnb)
-- [Preetier](https://prettier.io/)
+- [Cyclic](https://heroku.com/)
+
 
 <br/>
 
