@@ -4,7 +4,7 @@ const getUserDetail = async (userId) => profileRepo.findProfile(userId).then((da
   console.log(data[0]);
   if (data[0].length > 0) {
     console.log('Inside Profile Service inside check ');
-
+    
     return data[0];
   }
   throw new Error('User not found');

@@ -13,53 +13,41 @@ const mysql = require('mysql');
 //app.use(express.json())
 
 const profile_get = async (req, res) => {
-    console.log("Inside Profile Controller ")   ;
+//     console.log("Inside Profile Controller ")   ;
+//     let user_id = req.query.id || req.body.id;
+//     console.log(user_id);
+//     try {
+//         const user_detail = await profileService.getUserDetail(user_id);
+//         console.log(JSON.stringify(user_detail))
+//         res.status(200).send(JSON.stringify(user_detail[0]));
+//     } catch (err) {
+//         logger.error('Error - ', err);
+//         res.status(500).send();
+//     }
+  
+  
+    console.log("Inside");
     let user_id = req.query.id;
-    console.log(user_id);
-    try {
-        const user_detail = await profileService.getUserDetail(user_id);
-        console.log(JSON.stringify(user_detail))
-        res.status(200).send(JSON.stringify(user_detail[0]));
-    } catch (err) {
-        logger.error('Error - ', err);
-        res.status(500).send();
-    }
-  
-  
-    // console.log("Inside");
-    // let user_id = req.query.id;
     // console.log(req);
-    // console.log(user_id);
-    // var sql = 'SELECT USERS.ID,EMAIL_ID,FIRST_NAME,LAST_NAME,ADDRESS_ID,CONTACT,WALLET_AMOUNT,STREET,CITY,STATE,COUNTRY,ZIPCODE FROM USERS INNER JOIN ADDRESS ON ADDRESS.ID = USERS.ADDRESS_ID WHERE USERS.ID = ?';
+    console.log(req.query.id);
+    var sql = 'SELECT USERS.ID,EMAIL_ID,FIRST_NAME,LAST_NAME,ADDRESS_ID,CONTACT,WALLET_AMOUNT,STREET,CITY,STATE,COUNTRY,ZIPCODE FROM USERS LEFT OUTER JOIN ADDRESS ON ADDRESS.ID = USERS.ADDRESS_ID WHERE USERS.ID = ? ';
+      
+        db.query(sql, [user_id], function (err, res1, fields) {
+            if (err) {
+                console.log(err);
+            }
+            console.log('Executed Successfully'+JSON.stringify(res1[0]));
+            if (res1.length == 0) {
+              res.send(JSON.stringify(res1[0]));
+                // res.send("Incorrect Id")
+            }
+            else {
+                console.log("" + JSON.stringify(res1));
+                res.send(JSON.stringify(res1[0]));
+            }
+        });
 
-    // const db = mysql.createConnection({
-    //     host: 'sastacoupon.c5lcdzbaqcbr.ap-northeast-1.rds.amazonaws.com',
-    //     user: 'admin',
-    //     password: 'sastacoupon123',
-    //     database: 'sastacoupon'
-    // })
-
-    // db.connect((err) => {
-    //     if (err) {
-    //         console.log(err);
-    //     } else {
-    //         console.log("MYSQL CONNECTED")
-    //     }
-    //     db.query(sql, [user_id], function (err, result, fields) {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //         console.log('Executed Successfully');
-    //         if (result.length === 0) {
-    //             res.send("Incorrect Id")
-    //         }
-    //         else {
-    //             console.log("" + JSON.stringify(result));
-    //             res.send(JSON.stringify(result[0]));
-    //         }
-    //     });
-
-    // });//connect
+   
 
 
 }
