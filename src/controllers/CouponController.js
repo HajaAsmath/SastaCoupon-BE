@@ -36,13 +36,15 @@ const fetchRecentCoupons = async (req, res) => {
     memcache.get(memcache.generateKey('recent-coupon'), async (err, val) => {
       couponArray = JSON.parse(val);
       if (!couponArray) {
-        couponArray = JSON.stringify(await couponService.getRecentCoupons());
+        couponArray = JSON.stringify(await couponService.getRecentCoupons()
+          .catch((error) => { throw new Error(error.message); }));
         memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
       }
       res.status(200).json(couponArray);
     }).catch(async (err) => {
       logger.error('Error occured fetching recent coupons - ', err);
-      couponArray = JSON.stringify(await couponService.getRecentCoupons());
+      couponArray = JSON.stringify(await couponService.getRecentCoupons()
+        .catch((error) => { throw new Error(error.message); }));
       memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
       res.status(200).json(couponArray);
     });

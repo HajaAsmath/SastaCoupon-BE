@@ -21,7 +21,8 @@ const signUp = async (email, password) => {
     const user = await userRepo.findByEmaiId(email).then((data) => data[0]);
     if (user.length === 0) {
       const encryptedPassword = await bcrypt.hash(password, 10);
-      return userRepo.insertUser(email, encryptedPassword)
+      const address = await userRepo.createAddress().then((data) => data);
+      return userRepo.insertUser(email, encryptedPassword, address[0].insertId)
         .then((data) => {
           if (data[0].affectedRows === 1) {
             return { userId: data[0].insertId };
