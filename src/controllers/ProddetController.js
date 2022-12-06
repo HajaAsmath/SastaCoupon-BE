@@ -141,7 +141,7 @@ const product_details = (req, res) => {
             }
             console.log(err);
             console.log('Executed Successfully');
-            if (result.length === 0) {
+            if (result.length == 0) {
                 res.send("Incorrect Coupon Id")
             }
             else {
