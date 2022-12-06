@@ -23,7 +23,7 @@ const coupon_history_get = async (req, res) => {
     console.log(err);
     console.log('Executed Successfully');
     if (result.length === 0) {
-      res.send('Incorrect Coupon Id');
+      res.send(JSON.stringify('Incorrect Coupon Id'));
     } else {
       result.map((item) => {
         if (item.SELLER_ID == buyer_id) {

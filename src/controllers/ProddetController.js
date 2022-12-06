@@ -21,7 +21,7 @@ const payment = async (req, res) => {
     const amount = req.body.amount * 100;
     console.log(amount);
     const currency = 'INR';
-    var sql = 'INSERT INTO ORDER_DETAILS (ORDER_ID,COUPON_ID,STATUS,BUYER_ID,TRANSACTION_TYPE,PAYMENT_ID)VALUES ?';
+    var sql = 'INSERT INTO ORDER_DETAILS (ORDER_ID,COUPON_ID,STATUS,BUYER_ID,SELLER_ID,TRANSACTION_TYPE,PAYMENT_ID)VALUES ?';
     var sql_amount = 'UPDATE USERS SET WALLET_AMOUNT = ?  WHERE ID = ?';
     var sql_sold = 'UPDATE COUPON SET SOLD = ? WHERE ID = ?';
     const options = {
@@ -36,7 +36,7 @@ const payment = async (req, res) => {
         // Updateorder id in db 
 
         var values = [
-            [response.id, req.body.coupon_id, response.status, req.body.id, 'Bought',""]
+            [response.id, req.body.coupon_id, response.status, req.body.id,req.body.seller_id, 'Bought',""]
         ];
       
             db.query(sql, [values], function (err, result, fields) {
