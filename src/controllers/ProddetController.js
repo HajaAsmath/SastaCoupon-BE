@@ -14,7 +14,8 @@ const razorpay = new Razorpay({
 })
 
 const payment = async (req, res) => {
-    console.log("Inside razor post");
+   
+    logger.info(`Inside razor post`);
     console.log(req.body);
     const payment_capture = 1
     const amount = req.body.amount * 100;
