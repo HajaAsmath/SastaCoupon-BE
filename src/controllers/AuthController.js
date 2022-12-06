@@ -36,7 +36,7 @@ const signUp = async (req, res) => {
     res.status(200).json({ userId: result.userId, email: req.body.email, token });
   } catch (err) {
     logger.error(err);
-    res.status(500).send();
+    res.status(500).send(err.message);
   }
 };
 
