@@ -6,11 +6,11 @@ const logger = require('../utils/logger')
 const db = require('../database/mysql');
 
 const razorpay = new Razorpay({
-    // key_id: 'rzp_test_NpKUjWehxc13rP',
-    // key_secret: 'XutQhK8ic37ngBLlmN2A499v'
+    key_id: 'rzp_test_NpKUjWehxc13rP',
+    key_secret: 'XutQhK8ic37ngBLlmN2A499v'
 
-    key_id: 'rzp_live_xPxs0PPQHo3DmY',
-    key_secret: 'jPfNpSqDxTZ9hMf3EvMBWPgS'
+    // key_id: 'rzp_live_xPxs0PPQHo3DmY',
+    // key_secret: 'jPfNpSqDxTZ9hMf3EvMBWPgS'
 })
 
 const payment = async (req, res) => {
