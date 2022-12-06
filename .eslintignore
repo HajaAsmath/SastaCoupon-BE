@@ -1,0 +1,7 @@
+/build
+/node_modules
+/public
+/logs
+src/controllers/historyController.js
+src/controllers/ProddetController.js
+src/controllers/ProfileController.js
