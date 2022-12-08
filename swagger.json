@@ -1,0 +1,378 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Sasta Coupon CRUD",
+      "description": "Sasta coupon Application API",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:9000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Coupons",
+        "description": "Coupon Api"
+      },
+      {
+        "name": "Contact Us",
+        "description": "Contact us Api"
+      },
+      {
+        "name": "Authentication",
+        "description": "User authentication"
+      },
+      {
+        "name": "Order History",
+        "description": "Order history list"
+      }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+
+    "paths": {
+      "/recent-coupon": {
+        "get": {
+          "tags": ["Coupons"],
+          "summary": "Get recent coupons",
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/images": {
+        "get": {
+          "tags": ["Coupons"],
+          "summary": "Get images and occasions",
+          "parameters":[            
+            {
+            "name":"Authorization",
+            "in":"header",
+            "required":true,
+            "discription":"Auth header",
+            "type":"string",
+            "default":"Bearer {token response from login/signup}"
+            }
+        ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/uploadCoupon": {
+        "post": {
+          "tags": ["Coupons"],
+          "summary": "Upload a coupon",
+          "parameters":[
+            {
+              "name":"coupon",
+              "in":"body",
+              "required":true,
+              "discription":"Coupon model",
+              "type":"object",
+              "default":{
+                "couponName": "Pan America",
+                "couponCode": "KJJAPH123",
+                "expiryDate": "2022-12-23T08:46:36.000Z",
+                "couponImage": "https://i.postimg.cc/52FWWCS4/1.png",
+                "couponDiscription": "Get 10% off on your next flight booking",
+                "denomination": "10"
+              }
+            },
+            {
+              "name":"Authorization",
+              "in":"header",
+              "required":true,
+              "discription":"Auth header",
+              "type":"string",
+              "default":"Bearer {token response from login/signup}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/coupon-list": {
+        "get": {
+          "tags": ["Coupons"],
+          "summary": "Get coupons with filters",
+          "parameters": [
+            {
+              "name":"itemsPerPage",
+              "in":"query",
+              "required":true,
+              "description": "items to display per page",
+              "type":"number",
+              "default": 8
+            },
+            {
+              "name":"pageNumber",
+              "in":"query",
+              "required":true,
+              "description":"pagination number",
+              "default":1,
+              "type":"number"
+            },
+            {
+              "name":"min",
+              "in":"query",
+              "required":false,
+              "description":"Min denomination",
+              "default":1,
+              "type":"number"
+            },
+            {
+              "name":"max",
+              "in":"query",
+              "required":false,
+              "description":"Max denomination",
+              "default":100,
+              "type":"number"
+            },
+            {
+              "name":"fromDate",
+              "in":"query",
+              "required":false,
+              "description":"From expiry date",
+              "default":"Wed Dec 07 2022 00:00:00 GMT 0400 (Gulf Standard Time)",
+              "type":"string"
+            },
+            {
+              "name":"toDate",
+              "in":"query",
+              "required":false,
+              "description":"To expiry date",
+              "default":"Wed Dec 28 2022 00:00:00 GMT 0400 (Gulf Standard Time)",
+              "type":"string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/validate": {
+        "post": {
+          "tags": ["Coupons"],
+          "summary": "Validate coupon",
+          "parameters": [
+            {
+              "name":"coupon",
+              "in":"body",
+              "required":true,
+              "description": "coupon model",
+              "type":"object",
+              "default": {
+                "couponCode":"KJJAPH123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/logIn": {
+        "post": {
+          "tags": ["Authentication"],
+          "summary": "User login",
+          "parameters": [
+            {
+              "name":"user",
+              "in":"body",
+              "required":true,
+              "description": "auth model",
+              "type":"object",
+              "default": {
+                "email":"test@pestoproject.com",
+                "password":"123456"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "404": {
+              "description": "Username/Password doesn't match"
+            }
+          }
+        }
+      },
+      "/signUp": {
+        "post": {
+          "tags": ["Authentication"],
+          "summary": "User signup",
+          "parameters": [
+            {
+              "name":"user",
+              "in":"body",
+              "required":true,
+              "description": "auth model",
+              "type":"object",
+              "default": {
+                "email":"test@pestoproject.com",
+                "password":"123456"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "User already exist"
+            }
+          }
+        }
+      },
+      "/flushCache": {
+        "get": {
+          "tags": ["Coupons"],
+          "summary": "Flush memcache memory",
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/contactUs": {
+        "post": {
+          "tags": ["Contact Us"],
+          "summary": "Contact us submit",
+          "parameters": [
+            {
+              "name":"Contact us",
+              "in":"body",
+              "required":true,
+              "description": "contact us model",
+              "type":"object",
+              "default": {
+                "customerName":"Test",
+                "customerEmail":"test@gmail.com",
+                "orderId":"1",
+                "message":"Issue"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/couponhistory": {
+        "get": {
+          "tags": ["Order History"],
+          "summary": "Order history list",
+          "parameters": [
+            {
+              "name":"id",
+              "in":"query",
+              "required":true,
+              "description": "user id",
+              "type":"number",
+              "default":8
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "itemsPerPage": {
+        "type":"number",
+        "description":"items per page",
+        "example":8
+      },
+      "pageNumber": {
+        "type":"number",
+        "description":"pagination number",
+        "example":1
+      },
+      "User": {
+        "required": ["name", "_id", "companies"],
+        "properties": {
+          "_id": {
+            "type": "integer",
+            "uniqueItems": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "books": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "companies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Users": {
+        "type": "array",
+        "$ref": "#/definitions/User"
+      }
+    }
+  
+  }

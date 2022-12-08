@@ -5,6 +5,8 @@ const cors = require('cors');
 const app = express();
 
 const { PORT } = process.env;
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 const logger = require('./src/utils/logger');
 
 const AuthRoutes = require('./src/routes/AuthRoutes');
@@ -31,6 +33,11 @@ app.use('/', historyRoutes);
 app.use('/', couponRoutes);
 app.use('/', contactUsRoute);
 app.use('/', couponsold);
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument),
+);
 
 app.listen(PORT, () => {
   logger.info(`server running at 127.0.0.1:${PORT}`);
