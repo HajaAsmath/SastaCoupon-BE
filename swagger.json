@@ -9,7 +9,7 @@
         "url": "https://opensource.org/licenses/MIT"
       }
     },
-    "host": "localhost:9000",
+    "host": "https://sastacoupon.cyclic.app/",
     "basePath": "/",
     "tags": [
       {
@@ -29,7 +29,7 @@
         "description": "Order history list"
       }
     ],
-    "schemes": ["http"],
+    "schemes": ["https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
 
