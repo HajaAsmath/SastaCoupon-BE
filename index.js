@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
+const multer = require('multer')
+// const sharp = require('sharp')
 const app = express();
 
 const { PORT } = process.env;
@@ -18,6 +19,7 @@ const profileRoutes = require('./src/routes/profileRoutes');
 const historyRoutes = require('./src/routes/historyRoutes');
 const contactUsRoute = require('./src/routes/ContactUsRoute');
 const couponsold = require('./src/routes/CouponSoldRoutes');
+const profileimage = require('./src/routes/profileimageRoute');
 
 app.use(require('cookie-parser')());
 
@@ -31,6 +33,10 @@ app.use('/', historyRoutes);
 app.use('/', couponRoutes);
 app.use('/', contactUsRoute);
 app.use('/', couponsold);
+app.use('/', profileimage);
+
+
+
 
 app.listen(PORT, () => {
   logger.info(`server running at 127.0.0.1:${PORT}`);

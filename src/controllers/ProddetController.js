@@ -22,7 +22,7 @@ const payment = async (req, res) => {
     console.log(amount);
     const currency = 'INR';
     var sql = 'INSERT INTO ORDER_DETAILS (ORDER_ID,COUPON_ID,STATUS,BUYER_ID,SELLER_ID,TRANSACTION_TYPE,PAYMENT_ID)VALUES ?';
-    var sql_amount = 'UPDATE USERS SET WALLET_AMOUNT = ?  WHERE ID = ?';
+    var sql_amount = 'UPDATE USERS SET WALLET_AMOUNT = WALLET_AMOUNT+?  WHERE ID = ?';
     var sql_sold = 'UPDATE COUPON SET SOLD = ? WHERE ID = ?';
     const options = {
         amount: amount,
