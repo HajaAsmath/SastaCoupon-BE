@@ -35,7 +35,9 @@ const verifyCacheMiddleware = (req, res, next) => {
 const generateKey = (name, id) => `${name}_${id}`;
 
 const flush = () => {
-  memcache.flush();
+  if (process.env.CACHE_ENABLED === 'true') {
+    memcache.flush();
+  }
 };
 
 module.exports = {
