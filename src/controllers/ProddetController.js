@@ -63,7 +63,6 @@ const payment = async (req, res) => {
                     });
                 }
             });
-        
         res.json({
             id: response.id,
             currency: response.currency,
