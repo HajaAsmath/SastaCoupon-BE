@@ -1,7 +1,11 @@
 require('dotenv').config();
 const { Client } = require('memjs');
 
-const memcache = Client.create();
+let memcache;
+
+if (process.env.CACHE_ENABLED === 'true') {
+  memcache = Client.create();
+}
 
 const set = async (key, data, expiry) => {
   if (process.env.CACHE_ENABLED === 'true') {
