@@ -7,10 +7,10 @@ const insertCoupon = (coupon) => {
   return db.promise().query(`INSERT INTO sastacoupon.COUPON (NAME, DESCRIPTION, EXPIRY, PRICE, SELLER_ID, IMAGE_ID, COUPON_CODE) VALUES ('${coupon.couponName}', '${coupon.couponDiscription}', '${expiryDate}',${coupon.denomination}, ${coupon.userId}, ${coupon.imageId}, '${coupon.couponCode}')`);
 };
 
-const findByRecent = () => db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE EXPIRY >= DATE('${convertDate(new Date())}') AND  ORDER BY CREATED_TIMESTAMP DESC LIMIT 8`);
+const findByRecent = () => db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE EXPIRY >= DATE('${convertDate(new Date())}') AND SOLD <> 1 ORDER BY CREATED_TIMESTAMP DESC LIMIT 8`);
 
 const findCouponWithFilters = (filters, isCount) => {
-  let sql = `SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE EXPIRY >= DATE('${convertDate(new Date())}') `;
+  let sql = `SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE SOLD <> 1 AND EXPIRY >= DATE('${convertDate(new Date())}') `;
   if (filters.min || filters.max) {
     sql += 'AND ';
     if (filters.min && filters.max) {

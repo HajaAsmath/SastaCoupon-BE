@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const logger = require('../utils/logger');
 const couponService = require('../services/CouponService');
 const validateCouponService = require('../services/CouponValidateService');
@@ -30,22 +31,58 @@ const uploadCoupon = async (req, res) => {
   }
 };
 
+const fetchCouponCallback = async (err, val, couponArray, res) => {
+  try {
+    couponArray = JSON.parse(val);
+    if (!couponArray) {
+      couponArray = JSON.stringify(await couponService.getRecentCoupons()
+        .catch((error) => { throw new Error(error.message); }));
+      memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
+    }
+    res.status(200).json(couponArray);
+  } catch (error) {
+    logger.error('Error fetching recent coupon ', error.message);
+    res.send(500).send(error.message);
+  }
+};
+
+const fetchCouponWithFiltersCallback = async (
+  err,
+  val,
+  itemsPerPage,
+  pageNumber,
+  min,
+  max,
+  fromDate,
+  toDate,
+  couponArray,
+  count,
+  res,
+) => {
+  try {
+    let couponObj = JSON.parse(val);
+    if (!couponObj) {
+      const coupon = await couponService.getCouponWithFilters({
+        itemsPerPage, pageNumber, min, max, fromDate, toDate,
+      }).catch((error) => {
+        logger.error(error.message);
+        throw new Error(error.message);
+      });
+      [couponArray, count] = [coupon[0][0], coupon[1]];
+      couponObj = { couponArray, count };
+      memcache.set(memcache.generateKey(`filtered-coupons${pageNumber}${min}${max}${fromDate}${toDate}`), couponObj, 300)
+        .catch((error) => { logger.error('Error while saving to memcache : ', error.message); });
+    }
+    res.status(200).json(JSON.stringify(couponObj));
+  } catch (errr) {
+    res.status(500).send();
+  }
+};
+
 const fetchRecentCoupons = async (req, res) => {
   let couponArray;
   try {
-    memcache.get(memcache.generateKey('recent-coupon'), async (err, val) => {
-      couponArray = JSON.parse(val);
-      if (!couponArray) {
-        couponArray = JSON.stringify(await couponService.getRecentCoupons());
-        memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
-      }
-      res.status(200).json(couponArray);
-    }).catch(async (err) => {
-      logger.error('Error occured fetching recent coupons - ', err);
-      couponArray = JSON.stringify(await couponService.getRecentCoupons());
-      memcache.set(memcache.generateKey('recent-coupon'), couponArray, 300);
-      res.status(200).json(couponArray);
-    });
+    memcache.get(memcache.generateKey('recent-coupon'), (err, val) => { fetchCouponCallback(err, val, couponArray, res); });
   } catch (err) {
     logger.error(err);
     res.status(500).send();
@@ -59,26 +96,20 @@ const fetchCouponWithFilters = async (req, res) => {
   let couponArray;
   let count;
   try {
-    memcache.get(memcache.generateKey(`filtered-coupons${pageNumber}${min}${max}${fromDate}${toDate}`), async (err, val) => {
-      let couponObj = JSON.parse(val);
-      if (!couponObj) {
-        const coupon = await couponService.getCouponWithFilters({
-          itemsPerPage, pageNumber, min, max, fromDate, toDate,
-        });
-        [couponArray, count] = [coupon[0][0], coupon[1]];
-        couponObj = { couponArray, count };
-        memcache.set(memcache.generateKey(`filtered-coupons${pageNumber}${min}${max}${fromDate}${toDate}`), couponObj, 300);
-      }
-      res.status(200).json(JSON.stringify(couponObj));
-    }).catch(async (err) => {
-      logger.error('Error occured fetching recent coupons - ', err);
-      const coupon = await couponService.getCouponWithFilters({
-        itemsPerPage, pageNumber, min, max, fromDate, toDate,
-      });
-      [couponArray, count] = [coupon[0][0], coupon[1]];
-      const couponObj = { couponArray, count };
-      memcache.set(memcache.generateKey(`filtered-coupons${pageNumber}${min}${max}${fromDate}${toDate}`), couponObj, 300);
-      res.status(200).json(JSON.stringify(couponObj));
+    await memcache.get(memcache.generateKey(`filtered-coupons${pageNumber}${min}${max}${fromDate}${toDate}`), (err, val) => {
+      fetchCouponWithFiltersCallback(
+        err,
+        val,
+        itemsPerPage,
+        pageNumber,
+        min,
+        max,
+        fromDate,
+        toDate,
+        couponArray,
+        count,
+        res,
+      );
     });
   } catch (err) {
     logger.error(err);
@@ -108,7 +139,11 @@ const fetchCouponCount = async (req, res) => {
 };
 
 const flushCache = (req, res) => {
-  memcache.flush();
+  try {
+    memcache.flush();
+  } catch (err) {
+    res.status(500).send();
+  }
   res.status(200).send();
 };
 

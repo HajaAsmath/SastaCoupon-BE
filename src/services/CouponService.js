@@ -74,6 +74,9 @@ const getCouponWithFilters = async (filters) => {
       return [data[0]];
     }
     throw new Error('No data found');
+  }).catch((error) => {
+    logger.error('Error fetching coupon', error.message);
+    throw new Error(error);
   });
   const count = await couponRepo.findCouponWithFilters(filters, true).then((data) => {
     if (data[0]) {

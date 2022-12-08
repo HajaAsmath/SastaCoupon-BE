@@ -42,14 +42,6 @@ const signUp = async (req, res) => {
 
 const logout = () => 'Success';
 
-const test = async (req, res) => {
-  try {
-    res.end(await authService.test('mcpc123'));
-  } catch (err) {
-    res.status(400).send(err);
-  }
-};
-
 module.exports = {
-  logIn, signUp, logout, test,
+  logIn, signUp, logout,
 };

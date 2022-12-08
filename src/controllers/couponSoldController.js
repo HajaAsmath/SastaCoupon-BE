@@ -4,6 +4,7 @@ const Razorpay = require('razorpay')
 const mysql = require('mysql');
 const logger = require('../utils/logger')
 const db = require('../database/mysql');
+const memcache = require('../utils/memcache');
 
 const couponSoldPost = async (req, res) => {
 
@@ -20,6 +21,7 @@ const couponSoldPost = async (req, res) => {
         }
         else {
             console.log('Coupon Sold ');
+            memcache.flush();
             res.status(200).json(JSON.stringify(result));
         }
 

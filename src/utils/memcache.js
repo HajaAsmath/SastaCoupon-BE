@@ -1,12 +1,25 @@
+require('dotenv').config();
 const { Client } = require('memjs');
 
-const memcache = Client.create();
+let memcache;
+
+if (process.env.CACHE_ENABLED === 'true') {
+  memcache = Client.create();
+}
 
 const set = async (key, data, expiry) => {
-  await memcache.set(key, JSON.stringify(data), { expiry });
+  if (process.env.CACHE_ENABLED === 'true') {
+    await memcache.set(key, JSON.stringify(data), { expiry });
+  }
 };
 
-const get = async (key, callback) => memcache.get(key, callback);
+// eslint-disable-next-line consistent-return
+const get = async (key, callback) => {
+  if (process.env.CACHE_ENABLED === 'true') {
+    return memcache.get(key, callback);
+  }
+  await callback(null, null);
+};
 
 const verifyCacheMiddleware = (req, res, next) => {
   const key = 'generate_key';
@@ -22,7 +35,9 @@ const verifyCacheMiddleware = (req, res, next) => {
 const generateKey = (name, id) => `${name}_${id}`;
 
 const flush = () => {
-  memcache.flush();
+  if (process.env.CACHE_ENABLED === 'true') {
+    memcache.flush();
+  }
 };
 
 module.exports = {
