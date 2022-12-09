@@ -42,9 +42,6 @@ app.use(
 );
 app.use('/', profileimage);
 
-
-
-
 app.listen(PORT, () => {
   logger.info(`server running at 127.0.0.1:${PORT}`);
 });
