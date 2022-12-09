@@ -16,11 +16,12 @@ Welcome! we hope you enjoy the site as much as we enjoyed making it.
 
 # Table of Contents
 
-1. [Demo](#demo)
-2. [Installation](#installation)
-3. [Technology Stack](#technology-stack)
-4. [Authors](#authors)
-5. [License](#license)
+- [Table of Contents](#table-of-contents)
+- [Demo](#demo)
+- [Installation](#installation)
+- [Technology Stack](#technology-stack)
+- [Authors](#authors)
+- [License](#license)
 
 <br/>
 
@@ -41,7 +42,7 @@ Welcome! we hope you enjoy the site as much as we enjoyed making it.
 
 A "login by test account" button is provided to start using the application with test account or use the following credentials.
 
-<span><b>Email</b>:  pestoproject.com</span>
+<span><b>Email</b>:  test@pestoproject.com</span>
 <span><b>Password:</b> 123456</span>
 
 # Installation
@@ -86,6 +87,10 @@ We have taken utmost care while choosing our backend tech stack and given import
 - [Razorpay](https://razorpay.com/)
 - [JWT](https://jwt.io/)
 - [Cyclic](https://heroku.com/)
+- [Cyclic](https://app.cyclic.sh/#/)
+- [Memcache](https://memcached.org/)
+- [Swagger](https://swagger.io/)
+- [Airbnb Eslint](https://www.npmjs.com/package/eslint-config-airbnb)
 
 
 <br/>
@@ -93,7 +98,7 @@ We have taken utmost care while choosing our backend tech stack and given import
 # Authors
 
 - [Milind Chaudhari](https://www.linkedin.com/in/milind-chaudhari-6b5807129/) - [GiHub](https://github.com/Milind220397) - [Email](milind220397.com)
-- [Haja Asmath](https://www.linkedin.com/in/abhijain2618) - [GiHub](https://github.com/HajaAsmath) - [Email](hajawork21@gmail.com)
+- [Haja Asmath](https://www.linkedin.com/in/haja-asmath/) - [GiHub](https://github.com/HajaAsmath) - [Email](hajawork21@gmail.com)
 
 # License
 
