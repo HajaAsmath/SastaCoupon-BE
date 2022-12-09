@@ -68,7 +68,7 @@ A "login by test account" button is provided to start using the application with
 
 3. Install NPM packages
     ```sh
-    cd SastaCoupon-FE && npm install
+    cd SastaCoupon-BE && npm install
     ```
 4. Run
     ```sh
