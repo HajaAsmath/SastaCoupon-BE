@@ -86,7 +86,7 @@ We have taken utmost care while choosing our backend tech stack and given import
 - [Express](https://expressjs.com/)
 - [Razorpay](https://razorpay.com/)
 - [JWT](https://jwt.io/)
-- [Cyclic](https://heroku.com/)
+- [Cyclic](https://app.cyclic.sh/#/)
 - [Memcache](https://memcached.org/)
 - [Swagger](https://swagger.io/)
 - [Airbnb Eslint](https://www.npmjs.com/package/eslint-config-airbnb)
