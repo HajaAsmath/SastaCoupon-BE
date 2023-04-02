@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const fs = require('fs');
 const logger = require('../utils/logger');
 require('dotenv').config();
 
@@ -8,6 +9,10 @@ const dbConnect = () => {
     user: process.env.USERNAME,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
+    ssl: {
+      ca: fs.readFileSync('cacert.pem'),
+      rejectUnauthorized: false,
+    },
   });
 
   //  console.log(db);
