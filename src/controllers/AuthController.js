@@ -32,7 +32,7 @@ const logIn = async (req, res) => {
 const signUp = async (req, res) => {
   try {
     const result = await authService.signUp(req.body.email, req.body.password);
-    const token = addJwtToken({ email: req.body.email }, res);
+    const token = addJwtToken({ userId: result.userId, email: req.body.email }, res);
     res.status(200).json({ userId: result.userId, email: req.body.email, token });
   } catch (err) {
     logger.error(err);

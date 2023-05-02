@@ -4,7 +4,7 @@ const logger = require('../utils/logger');
 
 const insertCoupon = (coupon) => {
   const expiryDate = new Date(coupon.expiryDate).toISOString().slice(0, 10);
-  return db.promise().query(`INSERT INTO sastacoupon.COUPON (NAME, DESCRIPTION, EXPIRY, PRICE, SELLER_ID, IMAGE_ID, COUPON_CODE) VALUES ('${coupon.couponName}', '${coupon.couponDiscription}', '${expiryDate}',${coupon.denomination}, ${coupon.userId}, ${coupon.imageId}, '${coupon.couponCode}')`);
+  return db.promise().query(`INSERT INTO COUPON (NAME, DESCRIPTION, EXPIRY, PRICE, SELLER_ID, IMAGE_ID, COUPON_CODE) VALUES ('${coupon.couponName}', '${coupon.couponDiscription}', '${expiryDate}',${coupon.denomination}, ${coupon.userId}, ${coupon.imageId}, '${coupon.couponCode}')`);
 };
 
 const findByRecent = () => db.promise().query(`SELECT c.ID, NAME, PRICE, URL FROM COUPON c left join COUPON_IMAGE ci on c.IMAGE_ID = ci.ID WHERE EXPIRY >= DATE('${convertDate(new Date())}') AND SOLD <> 1 ORDER BY CREATED_TIMESTAMP DESC LIMIT 8`);
