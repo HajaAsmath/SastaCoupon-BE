@@ -67,7 +67,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ── Global Error Handler ────────────────────────────────
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   logger.error('Unhandled error', {
     error: err.message,
     stack: err.stack,
