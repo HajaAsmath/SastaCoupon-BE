@@ -1,38 +1,38 @@
 require('dotenv').config();
-const shortid = require('shortid');
-const Razorpay = require('razorpay');
-const mysql = require('mysql');
 const logger = require('../utils/logger');
 const db = require('../database/mysql');
 
 const coupon_history_get = async (req, res) => {
-  console.log('Inside History');
+  const buyerId = req.query.id;
+  logger.info('Coupon history request', { buyerId });
 
-  logger.info('Product Detail Controller Triggered');
-  const buyer_id = req.query.id;
-  console.log(req.query);
+  const sql = `
+    SELECT od.ORDER_ID, od.COUPON_ID, od.STATUS, od.BUYER_ID, od.SELLER_ID,
+           od.TRANSACTION_TYPE, od.PAYMENT_TIMESTAMP, od.PAYMENT_ID, ci.URL
+    FROM ORDER_DETAILS od
+    LEFT OUTER JOIN COUPON c ON od.COUPON_ID = c.ID
+    LEFT OUTER JOIN COUPON_IMAGE ci ON ci.ID = c.IMAGE_ID
+    WHERE (od.BUYER_ID = ? OR od.SELLER_ID = ?) AND od.STATUS = ?
+    ORDER BY od.PAYMENT_TIMESTAMP DESC
+  `;
 
-  let result1;
-
-  const sql = 'SELECT ORDER_DETAILS.ORDER_ID,ORDER_DETAILS.COUPON_ID,ORDER_DETAILS.STATUS,ORDER_DETAILS.BUYER_ID,ORDER_DETAILS.SELLER_ID,ORDER_DETAILS.TRANSACTION_TYPE,ORDER_DETAILS.PAYMENT_TIMESTAMP,ORDER_DETAILS.PAYMENT_ID,URL FROM ORDER_DETAILS LEFT OUTER JOIN COUPON ON ORDER_DETAILS.COUPON_ID = COUPON.ID  LEFT OUTER JOIN  COUPON_IMAGE ON COUPON_IMAGE.ID = COUPON.IMAGE_ID  WHERE (  ORDER_DETAILS.BUYER_ID = ? OR ORDER_DETAILS.SELLER_ID = ? ) AND STATUS = ?  ORDER BY PAYMENT_TIMESTAMP DESC';
-
-  db.query(sql, [buyer_id, buyer_id,"captured"], (err, result, fields) => {
+  db.query(sql, [buyerId, buyerId, 'captured'], (err, result) => {
     if (err) {
-      console.log(err);
+      logger.error('Error fetching coupon history', { error: err.message, buyerId });
+      return res.status(500).send('Error fetching history');
     }
-    console.log(err);
-    console.log('Executed Successfully');
-    if (result.length === 0) {
-      res.send(JSON.stringify('Incorrect Coupon Id'));
-    } else {
-      result.map((item) => {
-        if (item.SELLER_ID == buyer_id) {
-          item.TRANSACTION_TYPE = 'SOLD';
-        }
-      });
-      logger.info(`Response of Product details:${JSON.stringify(result)}`);
-      res.status(200).json(JSON.stringify(result));
+
+    if (!result || result.length === 0) {
+      return res.status(200).json([]);
     }
+
+    const history = result.map((item) => ({
+      ...item,
+      TRANSACTION_TYPE: String(item.SELLER_ID) === String(buyerId) ? 'SOLD' : item.TRANSACTION_TYPE,
+    }));
+
+    logger.info('History fetched', { buyerId, count: history.length });
+    return res.status(200).json(history);
   });
 };
 

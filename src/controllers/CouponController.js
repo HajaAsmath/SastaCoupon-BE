@@ -41,8 +41,8 @@ const fetchCouponCallback = async (err, val, couponArray, res) => {
     }
     res.status(200).json(couponArray);
   } catch (error) {
-    logger.error('Error fetching recent coupon ', error.message);
-    res.send(500).send(error.message);
+    logger.error('Error fetching recent coupon', { error: error.message });
+    res.status(500).send(error.message);
   }
 };
 
@@ -133,8 +133,8 @@ const fetchCouponCount = async (req, res) => {
     const count = await couponService.fetchCouponCount();
     res.status(200).json(count);
   } catch (err) {
-    logger.error(err);
-    res.send(500);
+    logger.error('Error fetching coupon count', { error: err.message });
+    res.status(500).send('Error fetching coupon count');
   }
 };
 

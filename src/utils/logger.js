@@ -1,49 +1,58 @@
-const { createLogger, format, transports } = require('winston');
-// const { join } = require('path');
+const {
+  createLogger, format, transports,
+} = require('winston');
+const { join } = require('path');
+const { existsSync, mkdirSync } = require('fs');
+
 require('dotenv').config();
-// const { existsSync, mkdirSync } = require('fs');
-// const winstonDaily = require('winston-daily-rotate-file');
 
-// const logDir = join(__dirname, process.env.LOG_DIR);
+const logDir = process.env.LOG_DIR
+  ? join(__dirname, '..', '..', process.env.LOG_DIR)
+  : join(__dirname, '..', '..', 'logs');
 
-// if (!existsSync(logDir)) {
-//   mkdirSync(logDir);
-// }
+if (!existsSync(logDir)) {
+  mkdirSync(logDir, { recursive: true });
+}
 
-const logFormat = format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`);
+const jsonFormat = format.combine(
+  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  format.errors({ stack: true }),
+  format.splat(),
+  format.json(),
+);
+
+const consoleFormat = format.combine(
+  format.colorize(),
+  format.timestamp({ format: 'HH:mm:ss' }),
+  format.printf(({ timestamp, level, message, ...meta }) => {
+    const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
+    return `${timestamp} ${level}: ${message}${metaStr}`;
+  }),
+);
 
 const logger = createLogger({
-  format: format.combine(
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss',
-    }),
-    logFormat,
-  ),
+  level: process.env.LOG_LEVEL || 'info',
+  format: jsonFormat,
   transports: [
     new transports.Console({
-      level: 'silly',
-      format: format.combine(format.splat(), format.colorize()),
+      format: consoleFormat,
     }),
-    // new winstonDaily({
-    //     level: 'debug',
-    //     datePattern: 'YYYY-MM-DD',
-    //     dirname: logDir + '/debug', // log file /logs/debug/*.log in save
-    //     filename: `%DATE%.log`,
-    //     maxFiles: 30, // 30 Days saved
-    //     json: false,
-    //     zippedArchive: true,
-    // }),
-    // new winstonDaily({
-    //     level: 'error',
-    //     datePattern: 'YYYY-MM-DD',
-    //     dirname: logDir + '/error', // log file /logs/error/*.log in save
-    //     filename: `%DATE%.log`,
-    //     maxFiles: 30, // 30 Days saved
-    //     handleExceptions: true,
-    //     json: false,
-    //     zippedArchive: true,
-    // })
+    new transports.File({
+      filename: join(logDir, 'error.log'),
+      level: 'error',
+      maxsize: 10 * 1024 * 1024, // 10 MB
+      maxFiles: 5,
+    }),
+    new transports.File({
+      filename: join(logDir, 'combined.log'),
+      maxsize: 10 * 1024 * 1024,
+      maxFiles: 5,
+    }),
   ],
+  exceptionHandlers: [
+    new transports.File({ filename: join(logDir, 'exceptions.log') }),
+  ],
+  exitOnError: false,
 });
 
 module.exports = logger;

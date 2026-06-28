@@ -4,16 +4,21 @@ const logger = require('../utils/logger');
 require('dotenv').config();
 
 const dbConnect = () => {
-  const db = mysql.createConnection({
+  const config = {
     host: process.env.HOST,
     user: process.env.USERNAME,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
-    ssl: {
+  };
+
+  if (process.env.DB_SSL === 'true') {
+    config.ssl = {
       ca: fs.readFileSync('cacert.pem'),
       rejectUnauthorized: false,
-    },
-  });
+    };
+  }
+
+  const db = mysql.createConnection(config);
 
   //  console.log(db);
 

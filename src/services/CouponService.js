@@ -34,7 +34,8 @@ const getAllImagesAndOccasion = () => imageRepo.findDefaultImagesAndOccaions().t
 const validateAndUploadCoupon = async (coupon) => {
   await couponValidationService.validateCoupon(coupon.couponCode, coupon.expiryDate)
     .catch((err) => {
-      throw new CouponValidationException(err.response.data);
+      const message = err.response ? err.response.data : err.message;
+      throw new CouponValidationException(message);
     });
   if (!checkObjectForNullValue(coupon) && checkPastDate(new Date(coupon.expiryDate))) {
     // eslint-disable-next-line no-param-reassign

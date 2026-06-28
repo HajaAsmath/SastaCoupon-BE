@@ -1,28 +1,26 @@
+const logger = require('../utils/logger');
 const profileRepo = require('../repos/ProfileRepo');
 
-const getUserDetail = async (userId) => profileRepo.findProfile(userId).then((data) => {
-  console.log(data[0]);
-  if (data[0].length > 0) {
-    console.log('Inside Profile Service inside check ');
-    
-    return data[0];
+const getUserDetail = async (userId) => {
+  const [rows] = await profileRepo.findProfile(userId);
+  if (!rows || rows.length === 0) {
+    throw new Error('User not found');
   }
-  throw new Error('User not found');
-});
-const saveUserDetail = (userProfile) => profileRepo.saveProfile(userProfile).then((data) => {
-  if (data[0].length > 0) {
-    console.log('Inside Profile Service inside check ');
+  return rows[0];
+};
 
-    return data[0];
-  }
-  throw new Error('User not found');
-});
+const saveUserDetail = async (userProfile) => {
+  await profileRepo.saveProfile(userProfile);
+  await profileRepo.saveAddress(userProfile);
+  logger.info('User profile saved', { userId: userProfile.id });
+};
 
-const getUserCredits = (userId) => profileRepo.fetchCreditsById(userId).then((data) => {
-  if (data[0].length > 0) {
-    return data[0][0].WALLET_AMOUNT;
+const getUserCredits = async (userId) => {
+  const [rows] = await profileRepo.fetchCreditsById(userId);
+  if (!rows || rows.length === 0) {
+    throw new Error('User not found');
   }
-  return 'User not found';
-});
+  return rows[0].WALLET_AMOUNT;
+};
 
 module.exports = { getUserDetail, saveUserDetail, getUserCredits };
