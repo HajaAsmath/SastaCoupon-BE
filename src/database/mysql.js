@@ -1,32 +1,27 @@
 const mysql = require('mysql2');
-const fs = require('fs');
 const logger = require('../utils/logger');
 require('dotenv').config();
 
 const dbConnect = () => {
   const config = {
-    host: process.env.HOST,
-    user: process.env.USERNAME,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT || '3306', 10),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
   };
 
   if (process.env.DB_SSL === 'true') {
-    config.ssl = {
-      ca: fs.readFileSync('cacert.pem'),
-      rejectUnauthorized: false,
-    };
+    config.ssl = { rejectUnauthorized: false };
   }
 
   const db = mysql.createConnection(config);
 
-  //  console.log(db);
-
   db.connect((err) => {
     if (err) {
-      logger.info(err.stack);
+      logger.error('MySQL connection failed', { error: err.message });
     } else {
-      logger.info('MYSQL CONNECTED');
+      logger.info('MySQL connected');
     }
   });
 
