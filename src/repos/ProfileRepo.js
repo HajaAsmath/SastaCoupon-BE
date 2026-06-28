@@ -11,12 +11,21 @@ const findProfile = (userId) => db.promise().query(
 
 const saveProfile = (userProfile) => db.promise().query(
   'UPDATE USERS SET FIRST_NAME = ?, LAST_NAME = ?, CONTACT = ?, PROFILE_IMG = ? WHERE ID = ?',
-  [userProfile.firstname, userProfile.lastname, userProfile.contact, userProfile.profile_img, userProfile.id],
+  [userProfile.firstname,
+    userProfile.lastname,
+    userProfile.contact,
+    userProfile.profile_img,
+    userProfile.id],
 );
 
 const saveAddress = (userProfile) => db.promise().query(
   'UPDATE ADDRESS SET STREET = ?, CITY = ?, STATE = ?, COUNTRY = ?, ZIPCODE = ? WHERE ID = ?',
-  [userProfile.street, userProfile.city, userProfile.state, userProfile.country, userProfile.zipcode, userProfile.address_id],
+  [userProfile.street,
+    userProfile.city,
+    userProfile.state,
+    userProfile.country,
+    userProfile.zipcode,
+    userProfile.address_id],
 );
 
 const fetchCreditsById = (userId) => db.promise().query(

@@ -39,7 +39,8 @@ app.use((req, res, next) => {
 
   res.on('finish', () => {
     const duration = Date.now() - start;
-    const level = res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info';
+    const status = res.statusCode >= 400 ? 'warn' : 'info';
+    const level = res.statusCode >= 500 ? 'error' : status;
     logger[level](`${req.method} ${req.path} ${res.statusCode} ${duration}ms`, {
       requestId,
       method: req.method,
@@ -66,7 +67,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ── Global Error Handler ────────────────────────────────
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.error('Unhandled error', {
     error: err.message,
     stack: err.stack,

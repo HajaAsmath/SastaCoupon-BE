@@ -24,7 +24,9 @@ const jsonFormat = format.combine(
 const consoleFormat = format.combine(
   format.colorize(),
   format.timestamp({ format: 'HH:mm:ss' }),
-  format.printf(({ timestamp, level, message, ...meta }) => {
+  format.printf(({
+    timestamp, level, message, ...meta
+  }) => {
     const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
     return `${timestamp} ${level}: ${message}${metaStr}`;
   }),
