@@ -96,7 +96,6 @@ We have taken utmost care while choosing our backend tech stack and given import
 
 # Authors
 
-- [Milind Chaudhari](https://www.linkedin.com/in/milind-chaudhari-6b5807129/) - [GiHub](https://github.com/Milind220397) - [Email](milind220397.com)
 - [Haja Asmath](https://www.linkedin.com/in/haja-asmath/) - [GiHub](https://github.com/HajaAsmath) - [Email](hajawork21@gmail.com)
 
 # License
