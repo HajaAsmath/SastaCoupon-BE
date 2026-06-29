@@ -15,6 +15,18 @@ const getImagesAndOccasion = async (req, res) => {
   }
 };
 
+const uploadBrandImage = async (req, res) => {
+  try {
+    const { dataUrl, brandName } = req.body;
+    if (!dataUrl || !brandName) return res.status(400).send('Image data and brand name are required');
+    const result = await couponService.uploadBrandImage(dataUrl, brandName.trim());
+    return res.status(200).json(result);
+  } catch (err) {
+    logger.error('Error uploading brand image', err);
+    return res.status(500).send('Failed to upload brand image');
+  }
+};
+
 const uploadCoupon = async (req, res) => {
   try {
     const coupon = req.body;
@@ -149,6 +161,7 @@ const flushCache = (req, res) => {
 
 module.exports = {
   getImagesAndOccasion,
+  uploadBrandImage,
   uploadCoupon,
   fetchRecentCoupons,
   fetchCouponWithFilters,

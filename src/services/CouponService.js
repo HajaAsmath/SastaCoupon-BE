@@ -31,6 +31,11 @@ const getAllImagesAndOccasion = () => imageRepo.findDefaultImagesAndOccaions().t
   return imageList;
 });
 
+const uploadBrandImage = async (dataUrl, brandName) => {
+  const [result] = await imageRepo.insertBrandImage(dataUrl, brandName);
+  return { imageId: result.insertId };
+};
+
 const validateAndUploadCoupon = async (coupon) => {
   await couponValidationService.validateCoupon(coupon.couponCode, coupon.expiryDate)
     .catch((err) => {
@@ -39,7 +44,7 @@ const validateAndUploadCoupon = async (coupon) => {
     });
   if (!checkObjectForNullValue(coupon) && checkPastDate(new Date(coupon.expiryDate))) {
     // eslint-disable-next-line no-param-reassign
-    coupon.imageId = await getImageId(coupon.couponImage);
+    coupon.imageId = coupon.imageId || await getImageId(coupon.couponImage);
     await couponRepo.insertCoupon(coupon).then((data) => {
       if (data[0].affectedRows === 1) {
         memcache.flush();
@@ -91,6 +96,7 @@ const getCouponWithFilters = async (filters) => {
 
 module.exports = {
   getAllImagesAndOccasion,
+  uploadBrandImage,
   validateAndUploadCoupon,
   getRecentCoupons,
   getCouponWithFilters,
