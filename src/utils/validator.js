@@ -17,8 +17,8 @@ const checkObjectForNullValue = (obj) => {
 
 const checkPastDate = (date) => {
   const today = new Date();
-  today.setHours(23, 59, 59, 998);
-  return date > today;
+  today.setHours(0, 0, 0, 0);
+  return date >= today;
 };
 
 const checkContainsNumber = (str) => /[0-9]/.test(str);

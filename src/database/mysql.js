@@ -19,9 +19,14 @@ const dbConnect = () => {
 
   db.connect((err) => {
     if (err) {
-      logger.error('MySQL connection failed', { error: err.message });
+      logger.error('MySQL connection failed', {
+        code: err.code,
+        message: err.message,
+        host: config.host,
+        port: config.port,
+      });
     } else {
-      logger.info('MySQL connected');
+      logger.info('MySQL connected', { host: config.host, port: config.port });
     }
   });
 
